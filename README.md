@@ -99,7 +99,6 @@ iface enp0s8 inet dhcp
   ```
 
 ### Installation
-
 1. Install latest updates of the machine.
 * Make sure that OS is up to date.
   ```sh
@@ -108,41 +107,81 @@ iface enp0s8 inet dhcp
   ```sh
   sudo apt upgrade
   ```
-2. Install PHP.
-  ```sh
-  sudo apt-get install php7.2 php7.2-cli php7.2-fpm php7.2-mysql php7.2-json php7.2-opcache php7.2-mbstring php7.2-xml php7.2-gd php7.2-curl
-  ```  
-
-3. Install NGINX.
-   ```sh
-   sudo apt install nginx
-   ```
-4. Set Limits for traffic using the `UFW`
+2. Switch to nopassword user.
 * On UFW.
    ```sh
    sudo ufw enable
    ```
-* Get status UFW.
    ```sh
-   sudo ufw status
-   ```
-* Deny all connections.
-   ```sh
-   sudo ufw default deny outgoing
+   sudo -i
    ```
    ```sh
-   sudo ufw default deny incoming
-   ```
-* Allow specific ports.
+   sudo adduser --shell /bin/bash myuser
+   ```   
    ```sh
-   sudo ufw allow out 80
+   sudo usermod -aG sudo myuser
+   ```  
+   ```sh
+   sudo echo "myuser ALL=(ALL) NOPASSWD: ALL" | (EDITOR="tee -a" visudo)
+   ```
+* Generate SSH, create sudo user with only an SSH key
+
+   ```sh
+   sudo ssh-keygen
+   ``` 
+   ```sh
+   sudo apt install openssh-server
+   ``` 
+   ```sh
+   sudo ufw allow ssh
+   ``` 
+   
+   ```sh
+   sudo adduser --shell /bin/bash --system --group myuser1
+   ``` 
+   ```sh
+   sudo mkdir /home/myuser1/.ssh
    ```
    ```sh
-   sudo ufw allow 'Nginx HTTP'
-   ```
-* Status.
+   sudo cp -Rfv /root/.ssh /home/myuser1/
+   ```  
    ```sh
-   sudo ufw status verbose 
+   sudo chown -Rfv myuser1:myuser1 /home/myuser1/.ssh
+   ``` 
+   ```sh
+   sudo chown -R myuser1:myuser1 /home/myuser1
+   ``` 
+   ```sh
+   sudo gpasswd -a myuser1 sudo
+   ``` 
+   ```sh
+   sudo  echo "myuser1 ALL=(ALL) NOPASSWD: ALL" | (EDITOR="tee -a" visudo)
+   ``` 
+* Disable root SSH login.   
+   ```sh
+   nano /etc/ssh/sshd_config
+   ```    
+* Uncomment "PermitRootLogin" and type "no":
+
+#LoginGraceTime 2m  
+**PermitRootLogin no**  
+#StrictModes yes  
+#MaxAuthTries 6  
+#MaxSessions 10  
+
+   ```sh
+   systemctl restart ssh
+   ```    
+
+
+3. Install PHP.
+  ```sh
+  sudo apt-get install php7.2 php7.2-cli php7.2-fpm php7.2-mysql php7.2-json php7.2-opcache php7.2-mbstring php7.2-xml php7.2-gd php7.2-curl
+  ```  
+
+4. Install NGINX.
+   ```sh
+   sudo apt install nginx
    ```
 5. Setup Wordpress.
 * Install My SQL database.
@@ -158,11 +197,11 @@ iface enp0s8 inet dhcp
 * Create database.   
 `CREATE DATABASE wordpress_db;`
 `GRANT ALL ON wordpress_db.* TO 'wpuser'@'localhost' IDENTIFIED BY 'Passw0rd!' WITH GRANT OPTION;`
-`LUSH PRIVILEGES;`  
+`FLUSH PRIVILEGES;`  
 `exit`
 * Create new directory.
    ```sh
-   mkdir /var/www/html/wordpress/public_html
+   mkdir -p /var/www/html/wordpress/public_html
    cd /var/www/html/wordpress/public_html
    ```
 * Download Wordpress.
@@ -172,7 +211,7 @@ iface enp0s8 inet dhcp
    ```sh
    tar -xzvf wordpress-5.4.10.tar.gz
    mv wordpress/* .
-   rm -rf wordpress/
+   rm -rf wordpress wordpress-5.4.10.tar.gz
    ```
 * Change the ownership and apply correct permissions.
    ```sh
@@ -187,7 +226,7 @@ iface enp0s8 inet dhcp
    ```sh
    nano default
    ``` 
-   and change here port from 80 to 8080 **(listen 8080;)**
+   and change here port from 80 to 8080 **(listen 8080;)** in the two places.
 * Create new file.
 
    ```sh
@@ -245,69 +284,32 @@ iface enp0s8 inet dhcp
    ```sh
    systemctl reload nginx
    ```   
-6. Switch to nopassword user.
+ 
+6. Set Limits for traffic using the `UFW`
+* Get status UFW.
    ```sh
-   sudo -i
+   sudo ufw status
+   ```
+* Deny all connections.
+   ```sh
+   sudo ufw default deny outgoing
    ```
    ```sh
-   sudo adduser --shell /bin/bash myuser
-   ```   
-   ```sh
-   sudo usermod -aG sudo myuser
-   ```  
-   ```sh
-   sudo echo "myuser ALL=(ALL) NOPASSWD: ALL" | (EDITOR="tee -a" visudo)
+   sudo ufw default deny incoming
    ```
-* Generate SSH, create sudo user with only an SSH key
-
+* Allow specific ports.
    ```sh
-   sudo ssh-keygen
-   ``` 
+   sudo ufw allow out 80
+   ```
    ```sh
-   sudo apt install openssh-server
-   ``` 
+   sudo ufw allow 'Nginx HTTP'
+   ```
+* Status.
    ```sh
-   sudo ufw allow ssh
-   ``` 
+   sudo ufw status verbose 
+   ```
    
-   ```sh
-   sudo adduser --shell /bin/bash --system --group myuser1
-   ``` 
-   ```sh
-   sudo mkdir /home/myuser1/.ssh
-   ```
-   ```sh
-   sudo cp -Rfv /root/.ssh /home/myuser1/
-   ```  
-   ```sh
-   sudo chown -Rfv myuser1:myuser1 /home/myuser1/.ssh
-   ``` 
-   ```sh
-   sudo chown -R myuser1:myuser1 /home/myuser1
-   ``` 
-   ```sh
-   sudo gpasswd -a myuser1 sudo
-   ``` 
-   ```sh
-   sudo  echo "myuser1 ALL=(ALL) NOPASSWD: ALL" | (EDITOR="tee -a" visudo)
-   ``` 
-7. Switch to nopassword user.   
-   ```sh
-   nano /etc/ssh/sshd_config
-   ```    
-* Uncomment "PermitRootLogin" and type "no":
-
-#LoginGraceTime 2m  
-**PermitRootLogin no**  
-#StrictModes yes  
-#MaxAuthTries 6  
-#MaxSessions 10  
-
-   ```sh
-   systemctl restart ssh
-   ```    
-
-
+   
 <!-- USAGE EXAMPLES -->
 ## Usage
 
