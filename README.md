@@ -314,6 +314,7 @@ iface enp0s8 inet dhcp
 ## Usage
 
 You can use this file for solution few task on Ubuntu 18.04. 
+**P.S. To complete the WordPress installation, go to your localhost: http://127.0.0.1/.**
 
 
 <!-- CONTACT -->
