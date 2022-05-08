@@ -76,7 +76,7 @@ port 80 (no need to perform the WP Install)
 ### Prerequisites
 
 Below is a list of the things you need to do and how to set them up. Set the IP for the network interface.
-* Gat get a list of available interfaces.
+* Get a list of available interfaces.
   ```sh
   ifconfig -a
   ```
@@ -84,19 +84,20 @@ Below is a list of the things you need to do and how to set them up. Set the IP 
   ```sh
   sudo nano /etc/network/interfaces
   ```
-* Edit file as mentioned below.
-auto lo
-iface lo inet loopback
-
-auto enp0s3
-iface enpos3 inet static
-    address 10.1.10.0/24
-    netmask 255.255.255.0
-    gateway 10.1.10.132
-    dns-nameservers 8.8.8.8
-
-auto enp0s8
-iface enp0s8 inet dhcp
+* Edit file as mentioned below.  
+  
+auto lo  
+iface lo inet loopback  
+  
+auto enp0s3  
+iface enpos3 inet static  
+    address 10.1.10.0/24  
+    netmask 255.255.255.0  
+    gateway 10.1.10.132  
+    dns-nameservers 8.8.8.8  
+  
+auto enp0s8  
+iface enp0s8 inet dhcp  
 * Apply changes.
 * Restart.
   ```sh
@@ -115,7 +116,7 @@ iface enp0s8 inet dhcp
   ```
 2. Install PHP.
   ```sh
-  sudo apt install php7.3 php7.3-fpm
+  sudo apt install php7.2 php7.2-fpm
   ```  
 
 3. Install NGINX.
@@ -152,7 +153,7 @@ iface enp0s8 inet dhcp
 5. Setup Wordpress.
 * Change directory to HTML.
    ```sh
-   cd / var/www/html/
+   cd /var/www/html/
    ```
 * Download Wordpress.
    ```sh
@@ -172,9 +173,9 @@ iface enp0s8 inet dhcp
    mysql -u root -p
    ```
 * Create database.   
-`CREATE DATABASE wordpress_db;
-GRANT ALL ON wordpress_db.* TO 'wpuser'@'localhost' IDENTIFIED BY 'Passw0rd!' WITH GRANT OPTION;
-LUSH PRIVILEGES;`
+`CREATE DATABASE wordpress_db;`
+`GRANT ALL ON wordpress_db.* TO 'wpuser'@'localhost' IDENTIFIED BY 'Passw0rd!' WITH GRANT OPTION;`
+`LUSH PRIVILEGES;`  
 `exit`
 
 * Configure NGINX for WordPress.
@@ -248,7 +249,7 @@ LUSH PRIVILEGES;`
    sudo -i
    ```
    ```sh
-   sudo sadduser --shell /bin/bash myuser
+   sudo adduser --shell /bin/bash myuser
    ```   
    ```sh
    sudo usermod -aG sudo myuser
@@ -275,7 +276,7 @@ LUSH PRIVILEGES;`
    sudo mkdir /home/myuser1/.ssh
    ```
    ```sh
-   sudo cp -Rfv /home/root/.ssh /home/myuser1/
+   sudo cp -Rfv /root/.ssh /home/myuser1/
    ```  
    ```sh
    sudo chown -Rfv myuser1:myuser1 /home/myuser1/.ssh
@@ -293,13 +294,13 @@ LUSH PRIVILEGES;`
    ```sh
    nano /etc/ssh/sshd_config
    ```    
-* Locate the line for PermitRootLogin in the configuration file, ensure it is not commented out with a preceding #, and change the value to no like so:
+* Uncomment "PermitRootLogin" and type "no":
 
-`#LoginGraceTime 2m
-PermitRootLogin no
-#StrictModes yes
-#MaxAuthTries 6
-#MaxSessions 10`
+#LoginGraceTime 2m  
+**PermitRootLogin no**  
+#StrictModes yes  
+#MaxAuthTries 6  
+#MaxSessions 10  
 
    ```sh
    systemctl restart ssh
