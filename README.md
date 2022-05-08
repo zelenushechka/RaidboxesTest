@@ -110,7 +110,7 @@ iface enp0s8 inet dhcp
   ```
 2. Install PHP.
   ```sh
-  sudo apt install php7.2 php7.2-fpm
+  sudo apt-get install php7.2 php7.2-cli php7.2-fpm php7.2-mysql php7.2-json php7.2-opcache php7.2-mbstring php7.2-xml php7.2-gd php7.2-curl
   ```  
 
 3. Install NGINX.
@@ -145,17 +145,6 @@ iface enp0s8 inet dhcp
    sudo ufw status verbose 
    ```
 5. Setup Wordpress.
-* Change directory to HTML.
-   ```sh
-   cd /var/www/html/
-   ```
-* Download Wordpress.
-   ```sh
-   wget https://wordpress.org/wordpress-5.4.10.tar.gz
-   ```
-   ```sh
-   tar -xzvf wordpress-5.4.10.tar.gz
-   ```
 * Install My SQL database.
    ```sh
    sudo apt install mysql-server 
@@ -171,26 +160,50 @@ iface enp0s8 inet dhcp
 `GRANT ALL ON wordpress_db.* TO 'wpuser'@'localhost' IDENTIFIED BY 'Passw0rd!' WITH GRANT OPTION;`
 `LUSH PRIVILEGES;`  
 `exit`
-
-* Configure NGINX for WordPress.
+* Create new directory.
    ```sh
-   mkdir -p /var/www/html/wordpress/public_html
+   mkdir /var/www/html/wordpress/public_html
+   cd /var/www/html/wordpress/public_html
    ```
+* Download Wordpress.
+   ```sh
+   wget https://wordpress.org/wordpress-5.4.10.tar.gz
+   ```
+   ```sh
+   tar -xzvf wordpress-5.4.10.tar.gz
+   mv wordpress/* .
+   rm -rf wordpress/
+   ```
+* Change the ownership and apply correct permissions.
+   ```sh
+   chown -R www-data:www-data *
+   chmod -R 755 *
+   ```
+* Configure NGINX for WordPress.
    ```sh
    cd /etc/nginx/sites-available
    ```
-* Create file.
+* Change port default server to 8080 in `default` file.
+   ```sh
+   nano default
+   ``` 
+   and change here port from 80 to 8080 **(listen 8080;)**
+* Create new file.
 
    ```sh
-   cat > wordpress.conf << EOF
+   touch wordpress.conf
+   nano wordpress.conf
+   ```
+* Add content.
+   ```sh
   server {
               listen 80;
               root /var/www/html/wordpress/public_html;
               index index.php index.html;
-              server_name SUBDOMAIN.DOMAIN.TLD;
+              server_name wpexample.com;
 
-        access_log /var/log/nginx/SUBDOMAIN.access.log;
-            error_log /var/log/nginx/SUBDOMAIN.error.log;
+        access_log /var/log/nginx/wpexample.wordpress.access.log;
+            error_log /var/log/nginx/wpexample.wordpress.error.log;
 
               location / {
                            try_files $uri $uri/ =404;
@@ -221,19 +234,13 @@ iface enp0s8 inet dhcp
                            log_not_found off;
              }
   }
-  EOF
    ```
    
-* Duplicate file to another folder.
-   ```sh
-   nginx -t
-   ```
+* Create a symbolic link for this file.
    ```sh
    cd /etc/nginx/sites-enabled
-   ```   
-   ```sh
    ln -s ../sites-available/wordpress.conf .
-   ```   
+   ```    
 * Reload NGINX.   
    ```sh
    systemctl reload nginx
