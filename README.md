@@ -27,9 +27,9 @@
   <ol>
     <li>
       <a href="#built-with">Built With</a>
-     <li><a href="#prerequisites">Getting Started</a></li>
-    <li><a href="#prerequisites">Prerequisites</a></li>
+     <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#installation">Installation</a></li>
+     <li><a href="#configure-network-interface">Configure Network Interface</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -278,7 +278,7 @@ port 80 (no need to perform the WP Install)
    sudo ufw status verbose 
    ```
    
-### Prerequisites
+### Configure Network Interface
 
 Below is a list of the things you need to do and how to set them up. Set the IP for the network interface.
 * Get a list of available interfaces.
