@@ -67,35 +67,6 @@ port 80 (no need to perform the WP Install)
 - Disallow root access through ssh
 
 
-### Prerequisites
-
-Below is a list of the things you need to do and how to set them up. Set the IP for the network interface.
-* Get a list of available interfaces.
-  ```sh
-  ifconfig -a
-  ```
-* Go to file.
-  ```sh
-  sudo nano /etc/network/interfaces
-  ```
-* Edit file as mentioned below.  
-  
-auto lo  
-iface lo inet loopback  
-  
-auto enp0s3  
-iface enp0s3 inet static  
-    address 10.1.10.0/24  
-    netmask 255.255.255.0  
-    gateway 10.1.10.132  
-    dns-nameservers 8.8.8.8  
-  
-* Apply changes.
-* Restart.
-  ```sh
-  sudo /etc/init.d/networking restart
-  ```
-
 ### Installation
 1. Install latest updates of the machine.
 * Make sure that OS is up to date.
@@ -307,6 +278,35 @@ iface enp0s3 inet static
    sudo ufw status verbose 
    ```
    
+### Prerequisites
+
+Below is a list of the things you need to do and how to set them up. Set the IP for the network interface.
+* Get a list of available interfaces.
+  ```sh
+  ifconfig -a
+  ```
+* Go to file.
+  ```sh
+  sudo nano /etc/network/interfaces
+  ```
+* Edit file as mentioned below.  
+  
+auto lo  
+iface lo inet loopback  
+  
+auto enp0s3  
+iface enp0s3 inet static  
+    address 10.1.10.0/24  
+    netmask 255.255.255.0  
+    gateway 10.1.10.132  
+    dns-nameservers 8.8.8.8  
+  
+* Apply changes.
+* Restart.
+  ```sh
+  sudo /etc/init.d/networking restart
+  ```
+
    
 <!-- USAGE EXAMPLES -->
 ## Usage
