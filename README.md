@@ -291,16 +291,17 @@ Below is a list of the things you need to do and how to set them up. Set the IP 
   ```
 * Edit file as mentioned below.  
   
-auto lo  
-iface lo inet loopback  
-  
-auto enp0s3  
-iface enp0s3 inet static  
-    address 10.1.10.0/24  
-    netmask 255.255.255.0  
-    gateway 10.1.10.132  
-    dns-nameservers 8.8.8.8  
-  
+  ```text
+  auto lo  
+  iface lo inet loopback  
+
+  auto enp0s3  
+  iface enp0s3 inet static  
+      address 10.1.10.0/24  
+      netmask 255.255.255.0  
+      gateway 10.1.10.132  
+      dns-nameservers 8.8.8.8
+  ```  
 * Apply changes.
 * Restart.
   ```sh
