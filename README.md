@@ -84,14 +84,12 @@ auto lo
 iface lo inet loopback  
   
 auto enp0s3  
-iface enpos3 inet static  
+iface enp0s3 inet static  
     address 10.1.10.0/24  
     netmask 255.255.255.0  
     gateway 10.1.10.132  
     dns-nameservers 8.8.8.8  
   
-auto enp0s8  
-iface enp0s8 inet dhcp  
 * Apply changes.
 * Restart.
   ```sh
